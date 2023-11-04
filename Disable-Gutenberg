@@ -39,6 +39,7 @@ add_action( 'wp_enqueue_scripts', function() {
 ****************************************
 
 #Function 3
+If you want to disable Gutenberg for a specific post type, use the code below:
 
 add_filter( 'use_block_editor_for_post_type', function( $enabled, $post_type ) {
     return 'your_post_type' === $post_type ? false : $enabled;
