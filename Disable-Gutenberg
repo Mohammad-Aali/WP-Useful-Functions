@@ -1,4 +1,4 @@
-#Function 1
+/** Function 1 **/
 
 if (version_compare($GLOBALS['wp_version'], '5.0-beta', '>')) {
 	
@@ -14,7 +14,7 @@ if (version_compare($GLOBALS['wp_version'], '5.0-beta', '>')) {
 
 ****************************************
 
-#Function 2
+/** Function 2 **/
 
 // Disable Gutenberg on the back end.
 add_filter( 'use_block_editor_for_post', '__return_false' );
@@ -38,8 +38,8 @@ add_action( 'wp_enqueue_scripts', function() {
 
 ****************************************
 
-#Function 3
-If you want to disable Gutenberg for a specific post type, use the code below:
+/** Function 3 **/
+// If you want to disable Gutenberg for a specific post type, use the code below:
 
 add_filter( 'use_block_editor_for_post_type', function( $enabled, $post_type ) {
     return 'your_post_type' === $post_type ? false : $enabled;
