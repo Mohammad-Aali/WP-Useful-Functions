@@ -7,8 +7,6 @@ Key Features:
 
 Efficient Code Snippets: Discover well-documented and optimized code snippets that address common WordPress development challenges, saving you time and effort in your projects.
 
-Modular Functionality: Each function or code snippet is designed to be modular and easy to integrate into your WordPress themes, plugins, or custom projects.
-
 Community Contributions: This repository is open for contributions from the WordPress development community. If you have your own useful functions to share, feel free to submit pull requests.
 
 Regular Updates: The repository will be regularly maintained and updated to keep pace with the latest WordPress developments and best practices.
