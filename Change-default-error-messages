@@ -1,0 +1,32 @@
+/** Change default error messages **/
+function my_custom_error_messages() {
+    global $errors;
+    $err_codes = $errors->get_error_codes();
+
+    // Invalid username.
+    if ( in_array( 'invalid_username', $err_codes ) ) {
+        $error = '<strong>Error</strong>: Something Wrong!';
+    }
+
+    // Invalid username.
+    if ( in_array( 'empty_username', $err_codes ) ) {
+        $error = '<strong>Error</strong>: Something Wrong!';
+    }
+
+    // Incorrect password.
+    if ( in_array( 'incorrect_password', $err_codes ) ) {
+        $error = '<strong>Error</strong>: Something Wrong!';
+    }
+
+    if ( in_array( 'empty_password', $err_codes ) ) {
+        $error = '<strong>Error</strong>: Something Wrong!';
+    }
+
+    if ( in_array( 'invalid_email', $err_codes ) ) {
+        $error = '<strong>Error</strong>: Something Wrong!';
+    }
+
+    return $error;
+}
+
+add_filter( 'login_errors', 'my_custom_error_messages');
