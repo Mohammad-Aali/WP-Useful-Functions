@@ -1,0 +1,14 @@
+add_filter( 'woocommerce_checkout_fields', 'reorder_fields' );
+ 
+function reorder_fields( $checkout_fields ) {
+    $checkout_fields['billing']['billing_first_name']['priority'] = 1;
+    $checkout_fields['billing']['billing_last_name']['priority'] = 2;
+$checkout_fields['billing']['billing_phone']['priority'] = 3;
+    $checkout_fields['billing']['billing_email']['priority'] = 4;
+    $checkout_fields['billing']['billing_state']['priority'] = 5;
+    $checkout_fields['billing']['billing_city']['priority'] = 6;
+    $checkout_fields['billing']['billing_address_1']['priority'] = 7;
+    $checkout_fields['billing']['billing_postcode']['priority'] = 8;
+
+	return $checkout_fields;
+}
