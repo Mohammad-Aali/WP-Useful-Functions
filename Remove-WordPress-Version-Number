@@ -1,0 +1,4 @@
+function remove_wp_version_rss() {
+ return'';
+ }
+add_filter('the_generator','remove_wp_version_rss');
