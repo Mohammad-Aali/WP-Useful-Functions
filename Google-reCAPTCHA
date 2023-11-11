@@ -1,0 +1,50 @@
+function my_recaptcha_key() {
+    $sitekey = "YOUR_SITE_KEY";
+    $secretkey = "YOUR_SECRET_KEY";
+    return explode(",", $sitekey . "," . $secretkey);
+}
+
+/* DON'T FORGET TO INSERT YOUR SITE KEY AND YOUR SECRET KEY IN THE ABOVE LINES! */
+
+/*
+ * Add reCaptcha on WordPress Admin Login Page Without Plugin
+ */
+function login_style() {
+    // Check if the current page is wp-login.php
+    if (basename($_SERVER['PHP_SELF']) === 'wp-login.php') {
+        wp_register_script('login-recaptcha', 'https://www.google.com/recaptcha/api.js', false, NULL);
+        wp_enqueue_script('login-recaptcha');
+    }
+}
+add_action('login_enqueue_scripts', 'login_style');
+
+function add_recaptcha_on_login_page() {
+    // Check if the current page is wp-login.php
+    if (basename($_SERVER['PHP_SELF']) === 'wp-login.php') {
+        echo '<div class="g-recaptcha brochure__form__captcha" data-sitekey="' . my_recaptcha_key()[0] . '"></div>';
+    }
+}
+add_action('login_form', 'add_recaptcha_on_login_page');
+
+function captcha_login_check($user, $password) {
+    // Check if the current page is wp-login.php
+    if (basename($_SERVER['PHP_SELF']) === 'wp-login.php') {
+        if (!empty($_POST['g-recaptcha-response'])) {
+            $secret = my_recaptcha_key()[1];
+            $ip = $_SERVER['REMOTE_ADDR'];
+            $captcha = $_POST['g-recaptcha-response'];
+            $rsp = file_get_contents('https://www.google.com/recaptcha/api/siteverify?secret=' . $secret . '&response=' . $captcha . '&remoteip=' . $ip);
+            $valid = json_decode($rsp, true);
+            if ($valid["success"] == true) {
+                return $user;
+            } else {
+                return new WP_Error('Captcha Invalid', __('<center>Captcha Invalid! Please check the captcha!</center>'));
+            }
+        } else {
+            return new WP_Error('Captcha Invalid', __('<center>Captcha Invalid! Please check the captcha!</center>'));
+        }
+    } else {
+        return $user;
+    }
+}
+add_action('wp_authenticate_user', 'captcha_login_check', 10, 2);
