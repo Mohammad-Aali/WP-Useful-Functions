@@ -1,0 +1,46 @@
+function custom_woocommerce_auto_complete_virtual_orders( $order_id ) {
+  // if in admin area, exit
+  if ( is_admin() ) {
+    return;
+  }
+
+  // if there is no order id, exit
+  if ( !$order_id ) {
+    return;
+  }
+
+  // get the order and its items
+  $order = wc_get_order( $order_id );
+  $items = $order->get_items();
+
+  // if there are no items, exit
+  if ( 0 >= count( $items ) ) {
+    return;
+  }
+
+  // initialize variables
+  $has_non_virtual_product = false;
+
+  // go through each item
+  foreach ( $items as $item ) {
+    // get the product object based on product id
+    $product = wc_get_product( $item->get_product_id() );
+
+    // check if the product is non-virtual and non-downloadable
+    if ( !$product->is_virtual() && !$product->is_downloadable() ) {
+      $has_non_virtual_product = true;
+      break; // exit the loop if a non-virtual, non-downloadable product is found
+    }
+  }
+
+  // if the order contains a non-virtual, non-downloadable product
+  if ( $has_non_virtual_product ) {
+    // set the order status to processing
+    $order->update_status( 'processing' );
+  } else {
+    // set the order status to completed
+    $order->update_status( 'completed' );
+  }
+}
+
+add_action( 'woocommerce_order_status_changed', 'custom_woocommerce_auto_complete_virtual_orders', 9999, 1 );
