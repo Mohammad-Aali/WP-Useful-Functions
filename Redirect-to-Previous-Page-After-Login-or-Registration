@@ -1,0 +1,40 @@
+// Start global session for saving the referer URL
+function start_session() {
+    if (!session_id()) {
+        session_start();
+    }
+}
+add_action('init', 'start_session', 1);
+
+// Get referer URL and save it
+function redirect_url() {
+    if (!is_user_logged_in()) {
+        $_SESSION['referer_url'] = wp_get_referer();
+    } else {
+        session_destroy();
+    }
+}
+add_action('template_redirect', 'redirect_url');
+
+// Login redirect
+function login_redirect() {
+    if (isset($_SESSION['referer_url'])) {
+        wp_redirect($_SESSION['referer_url']);
+    } elseif (isset($_GET['redirect_to'])) {
+        wp_redirect($_GET['redirect_to']);
+    } else {
+        wp_redirect(home_url('/my-account/'));
+    }
+    exit();
+}
+add_filter('woocommerce_login_redirect', 'login_redirect', 1100, 2);
+
+// Registration redirect
+function registration_redirect($redirect) {
+    if (isset($_SESSION['referer_url'])) {
+        $redirect = $_SESSION['referer_url'];
+        unset($_SESSION['referer_url']);
+    }
+    return $redirect;
+}
+add_filter('woocommerce_registration_redirect', 'registration_redirect');
