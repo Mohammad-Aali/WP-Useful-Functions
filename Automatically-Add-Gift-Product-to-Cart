@@ -34,3 +34,18 @@ elseif ( isset($free_qty) && $free_qty > 1 ) {
 $cart->set_quantity( $free_key, 1 );
 }
 }
+
+
+
+
+
+// Display free gifted product price to zero on minicart
+add_filter( 'woocommerce_cart_item_price', 'change_minicart_free_gifted_item_price_1000000', 10, 3 );
+function change_minicart_free_gifted_item_price_1000000( $price_html, $cart_item, $cart_item_key ) {
+$free_product_id = 123; // GIFT PRODUCT ID
+
+if( $cart_item['variation_id'] == $free_product_id ) {
+return wc_price( 0 );
+}
+return $price_html;
+}
