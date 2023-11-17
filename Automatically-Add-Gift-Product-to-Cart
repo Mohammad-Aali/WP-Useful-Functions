@@ -1,0 +1,36 @@
+// Add free gifted product for specific cart subtotal
+add_action( 'woocommerce_before_calculate_totals', 'check_free_gifted_product_1000000' );
+function check_free_gifted_product_1000000( $cart ) {
+if ( is_admin() && ! defined( 'DOING_AJAX' ) )
+return;
+
+// Settings
+$free_product_id = 123; // GIFT PRODUCT ID
+$targeted_subtotal = 100000; // MINIMUM AMOUNT OF CART
+
+$cart_subtotal = 0; // Initializing
+
+// Loop through cart items (first loop)
+foreach ( $cart->get_cart() as $cart_item_key => $cart_item ){
+// When free product is in cart
+if ( $free_product_id == $cart_item['variation_id'] ) {
+$free_key = $cart_item_key;
+$free_qty = $cart_item['quantity'];
+$cart_item['data']->set_price(0); // Optionally set the price to zero
+} elseif(38736 != $cart_item['product_id']) {
+$cart_subtotal += $cart_item['line_total'] + $cart_item['line_tax'];
+}
+}
+
+// If subtotal match and free product is not already in cart, add it
+if ( ! isset($free_key) && $cart_subtotal >= $targeted_subtotal ) {
+$cart->add_to_cart( $free_product_id );
+}
+// If subtotal doesn't match and free product is already in cart, remove it
+elseif ( isset($free_key) && $cart_subtotal < $targeted_subtotal ) { $cart->remove_cart_item( $free_key );
+}
+// Keep free product quantity to 1.
+elseif ( isset($free_qty) && $free_qty > 1 ) {
+$cart->set_quantity( $free_key, 1 );
+}
+}
