@@ -1,0 +1,7 @@
+function display_user_register_date () {
+  global $wp_query;
+  $registered = date_i18n( "m M, Y", strtotime( get_the_author_meta( 'user_registered', get_current_user_id() ) ) );
+  return $registered;
+}
+
+add_shortcode('user_register_date', 'display_user_register_date');
