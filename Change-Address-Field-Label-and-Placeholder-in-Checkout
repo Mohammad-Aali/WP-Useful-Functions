@@ -1,0 +1,6 @@
+add_filter('woocommerce_default_address_fields', 'override_default_address_checkout_fields', 20, 1);
+function override_default_address_checkout_fields( $address_fields ) {
+    $address_fields['address_1']['placeholder'] = 'YOUR_PLACEHOLDER';
+	$address_fields['address_1']['label'] = 'YOUR_LABEL';
+    return $address_fields;
+}
