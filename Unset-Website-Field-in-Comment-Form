@@ -1,0 +1,6 @@
+add_filter('comment_form_default_fields', 'unset_url_field_comments');
+function uunset_url_field_comments($fields){
+    if(isset($fields['url']))
+       unset($fields['url']);
+       return $fields;
+}
