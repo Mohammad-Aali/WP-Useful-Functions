@@ -1,0 +1,10 @@
+add_filter( 'gettext', 'my_translate_strings', 999, 3 );
+
+function my_translate_strings( $translated, $text, $domain ) {
+
+$translated = str_ireplace( 'ORIGINAL_TEXT', 'TRANSLATED_TEXT', $translated );
+
+// ETC.
+
+return $translated;
+}
