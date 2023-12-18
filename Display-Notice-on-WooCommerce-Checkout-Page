@@ -1,0 +1,4 @@
+add_action( 'woocommerce_before_checkout_form', 'skyverge_add_checkout_success', 9 );
+function skyverge_add_checkout_success() {
+	wc_print_notice( __( ' YOUR_TEXT', 'woocommerce' ), 'error' );
+}
