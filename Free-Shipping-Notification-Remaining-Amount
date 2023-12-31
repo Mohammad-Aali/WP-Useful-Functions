@@ -1,0 +1,32 @@
+/**
+ * Show a message at the cart/checkout displaying
+ * how much to go for free shipping.
+ */
+function my_custom_wc_free_shipping_notice() {
+
+	if ( ! is_cart() ) { // Remove partial if you don't want to show it on cart/checkout
+		return;
+	}
+
+	$packages = WC()->cart->get_shipping_packages();
+	$package = reset( $packages );
+	$zone = wc_get_shipping_zone( $package );
+	global $woocommerce;
+
+	$cart_total = WC()->cart->get_displayed_subtotal();
+	if ( WC()->cart->display_prices_including_tax() ) {
+		$cart_total = round( $cart_total - ( WC()->cart->get_discount_total() + WC()->cart->get_discount_tax() ), wc_get_price_decimals() );
+	} else {
+		$cart_total = round( $cart_total - WC()->cart->get_discount_total(), wc_get_price_decimals() );
+	}
+	foreach ( $zone->get_shipping_methods( true ) as $k => $method ) {
+		$min_amount = $method->get_option( 'min_amount' );
+
+        if ( $woocommerce->cart->cart_contents_count != 0 && $method->id == 'free_shipping' && ! empty( $min_amount ) && $cart_total < $min_amount ) {
+			$remaining = $min_amount - $cart_total;
+			wc_add_notice( sprintf( 'Add %s more to get free shipping!', wc_price( $remaining ) ) );
+		}
+	}
+
+}
+add_action( 'wp', 'my_custom_wc_free_shipping_notice' );
