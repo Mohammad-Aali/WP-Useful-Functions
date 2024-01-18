@@ -3,7 +3,7 @@
 setcookie("FILE_NAME", 0123456789);
 header("Location: wp-login.php");
 
-/* Step 1 Descriptions:
+/* Step 1 Description:
 Please replace "FILE_NAME" with the name of the PHP file you created. The file name should only include the name without the PHP extension.
 For example, I chose this name for my PHP File: WP-MyWeb@Dm!n
 You can modify the 10-digit number between 0 and 9 to any value you prefer, keeping it as a 10-digit number.
@@ -19,7 +19,7 @@ RewriteCond %{HTTP_COOKIE} !^.*WP\-MyWeb@Dm!n=0123456789.*$ [NC]
 RewriteRule wp-login.php - [F]
 </IfModule>
 
-/* Step 2 Descriptions:
+/* Step 2 Description:
 Please replace "WP-MyWeb@Dm!n" in line 4 with the name of your PHP file. Also, instead of the number range from 0 to 9, insert the actual value you set in your PHP file.
 If your PHP file name follows a similar structure to the example I provided (with a hyphen after "WP"), you should add a backslash after "WP" in line 4 of the htaccess code.
 After making these changes, attempting to access the previous addresses of wp-admin or wp-login will result in a 403 error.
