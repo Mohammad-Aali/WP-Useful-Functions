@@ -1,0 +1,40 @@
+/* Step 1: Create a new login page in WP root(public_html) with a PHP extension (FILE_NAME.php) and add the code provided below to this file: */
+<?php
+setcookie("FILE_NAME", 0123456789);
+header("Location: wp-login.php");
+
+/* Step 1 Descriptions:
+Please replace "FILE_NAME" with the name of the PHP file you created. The file name should only include the name without the PHP extension.
+For example, I chose this name for my PHP File: WP-MyWeb@Dm!n
+You can modify the 10-digit number between 0 and 9 to any value you prefer, keeping it as a 10-digit number.
+*/
+
+/***************************************************************************************************************/
+
+/* Step 2: Modify your .htaccess file by adding the following code to it: */
+<IfModule mod_rewrite.c>
+RewriteEngine On
+RewriteBase /
+RewriteCond %{HTTP_COOKIE} !^.*WP\-MyWeb@Dm!n=0123456789.*$ [NC]
+RewriteRule wp-login.php - [F]
+</IfModule>
+
+/* Step 2 Descriptions:
+Please replace "WP-MyWeb@Dm!n" in line 4 with the name of your PHP file. Also, instead of the number range from 0 to 9, insert the actual value you set in your PHP file.
+If your PHP file name follows a similar structure to the example I provided (with a hyphen after "WP"), you should add a backslash after "WP" in line 4 of the htaccess code.
+After making these changes, attempting to access the previous addresses of wp-admin or wp-login will result in a 403 error.
+Going forward, the new address to access the login page of your website will be:
+
+yourdomain/YOUR_PHP_FILE_NAME.php
+
+Replace "YOUR_PHP_FILE_NAME" with the name of the PHP file you created in step 1. For example, in my case:
+https://example.com/WP-MyWeb@Dm!n.php
+*/
+
+/***************************************************************************************************************/
+
+/* Important note:
+When selecting a name for your PHP file, you have the flexibility to use special characters like @, _, !, and others.
+However, based on the tests conducted, certain characters such as # and $ can cause issues. If your file name includes these problematic characters, accessing the page may result in a 404 error.
+Unfortunately, the reason behind this specific behavior is unknown. It is advisable to avoid using # and $ in your PHP file names to ensure smooth access to the page.
+*/
