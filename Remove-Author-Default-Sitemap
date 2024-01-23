@@ -1,0 +1,27 @@
+/* Step 1: Remove Author Sitemap */
+
+function remove_author_category_pages_from_sitemap($provider, $name)
+{
+    if ('users' === $name) {
+        return false;
+    }
+    return $provider;
+}
+
+add_filter('wp_sitemaps_add_provider', 'remove_author_category_pages_from_sitemap', 10, 2);
+
+/***************************************************************************************************************/
+
+/* Step 2: Redirect Author Page to 404 */
+
+// Redirect Author Page to 404
+function rn_redirect_author_page() {
+  global $wp_query;
+
+  if ( is_author() ) {
+    // Redirect to 404 error page
+    $wp_query->set_404();
+    status_header(404);
+  }
+}
+add_action( 'template_redirect', 'rn_redirect_author_page');
