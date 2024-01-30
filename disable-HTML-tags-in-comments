@@ -1,0 +1,13 @@
+function convert_comment_html_entities($comment_text) {
+    $comment_text = htmlspecialchars($comment_text);
+    $comment_text = make_clickable($comment_text);
+    return $comment_text;
+}
+
+function disable_comment_links($comment_text) {
+    $comment_text = strip_tags($comment_text);
+    return $comment_text;
+}
+
+add_filter('comment_text', 'convert_comment_html_entities', 10, 1);
+add_filter('comment_text', 'disable_comment_links', 20, 1);
