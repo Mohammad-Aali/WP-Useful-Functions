@@ -1,0 +1,40 @@
+/* DON'T FORGET TO INSERT YOUR SITE KEY AND YOUR SECRET KEY IN THE BELOW LINES! */
+
+function enqueue_recaptcha_script() {
+    if (is_singular('post') && comments_open()) {
+        wp_enqueue_script('recaptcha', 'https://www.google.com/recaptcha/api.js', array(), null, true);
+    }
+}
+add_action('wp_enqueue_scripts', 'enqueue_recaptcha_script');
+
+function wpb_move_comment_field_to_bottom( $fields ) {
+    $comment_field = $fields['comment'];
+    unset( $fields['comment'] );
+    $fields['comment'] = $comment_field;
+
+    if (is_singular('post') && comments_open()) {
+        $site_key = 'YOUR_SITE_KEY'; // Replace with your reCaptcha site key
+        $fields['recaptcha'] = '<div class="comment-form-recaptcha" style="margin-bottom: 20px">';
+        $fields['recaptcha'] .= '<div class="g-recaptcha" data-sitekey="' . $site_key . '"></div>';
+        $fields['recaptcha'] .= '</div>';
+    }
+
+    return $fields;
+}
+add_filter( 'comment_form_fields', 'wpb_move_comment_field_to_bottom' );
+
+function verify_comment_captcha($commentdata) {
+    if (is_singular('post') && comments_open()) {
+        $secret_key = 'YOUR_SECRET_KEY'; // Replace with your reCaptcha secret key
+        $captcha = $_POST['g-recaptcha-response'];
+        $response = file_get_contents("https://www.google.com/recaptcha/api/siteverify?secret={$secret_key}&response={$captcha}");
+        $response = json_decode($response);
+
+        if (!$response->success) {
+            wp_die(__('Error: Captcha verification failed.'));
+        }
+    }
+
+    return $commentdata;
+}
+add_filter('preprocess_comment', 'verify_comment_captcha');
