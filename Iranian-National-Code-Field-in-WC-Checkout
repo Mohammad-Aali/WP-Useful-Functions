@@ -1,0 +1,52 @@
+//The function of checking the accuracy of the national code
+function  check_national_code($code) {
+    if( !preg_match('/^[0-9]{10}$/',$code) )
+        return false;
+    for( $i=0; $i<10; $i++ )
+        if( preg_match('/^'.$i.'{10}$/',$code) )
+            return false;
+        for( $i=0,$sum=0;$i<9;$i++ )
+            $sum += ((10-$i) * intval(substr($code, $i,1)));
+    $ret = $sum%11;
+    $parity = intval(substr($code, 9,1));
+    if( ($ret<2 && $ret==$parity) || ($ret>=2 && $ret==11-$parity) )
+        return true;
+     
+    return false;
+}
+
+
+// Adding national code field to WooCommerce Checkout page
+function add_custom_national_code_field() {
+    echo '<div class="form-row form-row-wide woocommerce-additional-fields__field-wrapper">
+                <label for="billing_national_code">' . __('کد ملی', 'your-theme-domain') . ' <span class="required">*</span></label>
+                <span class="woocommerce-input-wrapper"><input type="text" class="input-text" name="billing_national_code" id="billing_national_code" value="' . esc_attr(isset($_POST['billing_national_code']) ? $_POST['billing_national_code'] : '') . '" /></span>
+        </div>';
+}
+add_action('woocommerce_after_checkout_billing_form', 'add_custom_national_code_field');
+  
+
+function validate_custom_national_code_field() {
+    $code = isset($_POST['billing_national_code']) ? sanitize_text_field($_POST['billing_national_code']) : '';
+  
+    if (!empty($code) && ! check_national_code($code)) {
+        wc_add_notice( __( 'کد ملی وارد شده معتبر نمی باشد!' ), 'error' );
+    }
+}
+add_action('woocommerce_checkout_process', 'validate_custom_national_code_field');
+
+
+// Saved national code in the order
+function save_custom_national_code_field($order_id) {
+    if (!empty($_POST['billing_national_code'])) {
+        update_post_meta($order_id, 'billing_national_code', sanitize_text_field($_POST['billing_national_code']));
+    }
+}
+add_action('woocommerce_checkout_update_order_meta', 'save_custom_national_code_field');
+
+
+//Display the national code in the orders section of the admin
+function  checkout_field_display_admin_order_meta($order){
+    echo '<p><strong>'.__('کد ملی').':</strong> ' . get_post_meta( $order->id, 'billing_national_code', true ) . '</p>';
+}
+add_action( 'woocommerce_admin_order_data_after_billing_address', 'checkout_field_display_admin_order_meta', 10, 1 );
