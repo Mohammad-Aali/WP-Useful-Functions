@@ -1,0 +1,34 @@
+function TheTextHasString($text, $string) {
+return strpos($text, $string) !== false;
+}
+
+
+function BlockExternalHostRequests ($false, $parsed_args, $url) {
+$blockedHosts = [
+'github.com',
+'yoast.com',
+'api.wordpress.org',
+'w.org',
+'yoa.st',
+'unyson.io',
+'siteorigin.com',
+'elementor.com',
+'woocommerce.com'
+
+];
+
+foreach ( $blockedHosts as $host ) {
+if ( !empty($host) && TheTextHasString($url, $host) ) {
+return [
+'headers' => '',
+'body' => '',
+'response' => '',
+'cookies' => '',
+'filename' => ''
+];
+}
+}
+
+return $false;
+}
+add_filter('pre_http_request', 'BlockExternalHostRequests', 10, 3);
