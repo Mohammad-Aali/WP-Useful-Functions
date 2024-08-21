@@ -1,0 +1,30 @@
+// افزودن فیلد به صفحه ویرایش سفارش در پیشخوان
+add_action('woocommerce_admin_order_data_after_order_details', 'add_tracking_code_field');
+
+function add_tracking_code_field($order){
+    echo '<p class="form-field form-field-wide">
+        <label for="tracking_code">' . __('کد رهگیری پستی') . ':</label>
+        <input type="text" class="short" style="" name="tracking_code" id="tracking_code" value="' . get_post_meta($order->get_id(), 'tracking_code', true) . '">
+    </p>';
+}
+
+// ذخیره کد رهگیری پستی
+add_action('woocommerce_process_shop_order_meta', 'save_tracking_code');
+
+function save_tracking_code($order_id){
+    if(isset($_POST['tracking_code'])){
+        update_post_meta($order_id, 'tracking_code', sanitize_text_field($_POST['tracking_code']));
+    }
+}
+
+// نمایش کد رهگیری در صفحه جزئیات سفارش مشتری
+add_action('woocommerce_order_details_after_order_table', 'display_tracking_code_to_customer');
+
+function display_tracking_code_to_customer($order){
+    $tracking_code = get_post_meta($order->get_id(), 'tracking_code', true);
+    if($tracking_code){
+        echo '<div class="tracking-code-box">';
+        echo '<p><strong>' . __('کد رهگیری پستی') . ':</strong> ' . esc_html($tracking_code) . '</p>';
+        echo '</div>';
+    }
+}
