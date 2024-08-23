@@ -3,7 +3,7 @@ add_action('woocommerce_admin_order_data_after_order_details', 'add_tracking_cod
 
 function add_tracking_code_field($order){
     echo '<p class="form-field form-field-wide">
-        <label for="tracking_code">' . __('کد رهگیری پستی') . ':</label>
+        <label for="tracking_code">کد رهگیری پستی:</label>
         <input type="text" class="short" style="" name="tracking_code" id="tracking_code" value="' . get_post_meta($order->get_id(), 'tracking_code', true) . '">
     </p>';
 }
@@ -24,7 +24,7 @@ function display_tracking_code_to_customer($order){
     $tracking_code = get_post_meta($order->get_id(), 'tracking_code', true);
     if($tracking_code){
         echo '<div class="tracking-code-box">';
-        echo '<p><strong>' . __('کد رهگیری پستی') . ':</strong> ' . esc_html($tracking_code) . '</p>';
+        echo '<p><strong>کد رهگیری پستی:</strong> ' . esc_html($tracking_code) . '</p>';
         echo '</div>';
     }
 }
