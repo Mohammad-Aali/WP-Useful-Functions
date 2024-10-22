@@ -1,0 +1,61 @@
+function enqueue_sweetalert_scripts() {
+    if (is_checkout()) {
+        wp_enqueue_script( 'sweetalert2', 'https://cdn.jsdelivr.net/npm/sweetalert2@11', array(), null, true );
+    }
+}
+add_action( 'wp_enqueue_scripts', 'enqueue_sweetalert_scripts' );
+
+
+
+
+
+function isUserFromIran() {
+    $userIP = $_SERVER['REMOTE_ADDR'];
+
+    $ch = curl_init();
+
+    $geolocationAPI = "http://ip-api.com/json/$userIP";
+    curl_setopt($ch, CURLOPT_URL, $geolocationAPI);
+    curl_setopt($ch, CURLOPT_RETURNTRANSFER, 1);
+    curl_setopt($ch, CURLOPT_TIMEOUT, 5);
+
+    $response = curl_exec($ch);
+
+    if ($response === false) {
+        curl_close($ch);
+        return false;
+    }
+
+    curl_close($ch);
+
+    $data = json_decode($response);
+
+    if (isset($data->country) && $data->country == "Iran") {
+        return true;
+    }
+
+    return false;
+}
+
+
+
+
+
+function displayVPNMessage() {
+    if (!isUserFromIran()) {
+        ?>
+        <script>
+        document.addEventListener("DOMContentLoaded", function() {
+            Swal.fire({
+                icon: 'warning',
+                title: 'توجه!',
+                html: '<span id="vpn-message-text">به منظور جلوگیری از بروز خطا در پردازش سفارش شما، خواهشمند است قبل از ورود به درگاه بانکی، VPN خود را خاموش نمایید.</span>',
+                confirmButtonText: 'تایید',
+                allowOutsideClick: false
+            })
+        });
+        </script>
+        <?php
+    }
+}
+add_action('woocommerce_before_checkout_form', 'displayVPNMessage');
