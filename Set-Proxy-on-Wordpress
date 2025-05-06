@@ -1,0 +1,6 @@
+/* This should be added to the wp-config.php file */
+define('WP_PROXY_HOST', 'YOUR_IP');
+define('WP_PROXY_PORT', 'YOUR_PORT');
+define('WP_PROXY_USERNAME', 'user');
+define('WP_PROXY_PASSWORD', 'password');
+define('WP_PROXY_BYPASS_HOSTS', 'localhost, *.wordpress.org');
